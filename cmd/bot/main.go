@@ -18,7 +18,7 @@ func main() {
 	token := os.Getenv("TELEGRAM_BOT_TOKEN")
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
-		log.Panic(err)
+		log.Fatal(err)
 	}
 
 	bot.Debug = true

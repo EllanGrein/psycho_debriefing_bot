@@ -26,6 +26,12 @@ func (b *Bot) Start() error {
 
 func (b *Bot) handleUpdates(updates tgbotapi.UpdatesChannel) error {
 	for update := range updates {
+		if update.CallbackQuery != nil {
+			err := b.handleCallbackQuery(update.CallbackQuery)
+			if err != nil {
+				return err
+			}
+		}
 		if update.Message == nil {
 			continue
 		}
@@ -48,4 +54,20 @@ func (b *Bot) initUpdatesChannel() tgbotapi.UpdatesChannel {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 	return b.bot.GetUpdatesChan(u)
+}
+
+func (b *Bot) createKeyboard() tgbotapi.InlineKeyboardMarkup {
+	keyboard := tgbotapi.NewInlineKeyboardMarkup(
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("Шкала депрессии Бека", "bek"),
+		),
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("Тест Люшера", "lusher"),
+		),
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("Нейрохимический определитель темперамента Фишер", "fisher"),
+		),
+	)
+
+	return keyboard
 }
